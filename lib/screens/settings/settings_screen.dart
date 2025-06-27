@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gym/models/setting.dart';
 import 'package:gym/models/user.dart';
 import 'package:gym/repositories/setting_repository.dart';
@@ -92,58 +93,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  void _showDeleteAccountConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Hapus Akun'),
-        content: const Text('Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Implement delete account functionality
-              Navigator.pop(context);
-            },
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSettingItem({
     required String title,
     required IconData icon,
+    String? subtitle,
     VoidCallback? onTap,
     bool showDivider = true,
+    bool isDestructive = false,
   }) {
     return Column(
       children: [
-        ListTile(
-          leading: Icon(icon, color: Colors.black54),
-          title: Text(title),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: onTap,
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isDestructive 
+                    ? Colors.red.shade50 
+                    : Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: isDestructive 
+                    ? Colors.red.shade400 
+                    : Colors.blue.shade700,
+                size: 22,
+              ),
+            ),
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDestructive 
+                    ? Colors.red.shade700 
+                    : Colors.grey.shade800,
+              ),
+            ),
+            subtitle: subtitle != null
+                ? Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                  )
+                : null,
+            trailing: Icon(
+              Icons.chevron_right,
+              color: isDestructive 
+                  ? Colors.red.shade300 
+                  : Colors.blue.shade300,
+            ),
+            onTap: onTap,
+          ),
         ),
-        if (showDivider)
-          const Divider(height: 1),
       ],
     );
   }
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      padding: const EdgeInsets.fromLTRB(32, 24, 32, 8),
       child: Text(
-        title,
+        title.toUpperCase(),
         style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.red[400],
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+          color: Colors.blue.shade700,
         ),
       ),
     );
@@ -152,6 +184,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Pengaturan',
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -160,57 +212,88 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   // Profile Section
                   Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.blue.shade700,
+                          Colors.blue.shade500,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.shade100,
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
                       children: [
-                        Text(
-                          'Profile',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red[400],
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person,
+                              size: 36,
+                              color: Colors.blue.shade700,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.grey[300],
-                              child: const Icon(Icons.person, size: 40, color: Colors.grey),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _currentUser?.username ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    _currentUser?.role ?? '',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _currentUser?.username ?? '',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  _currentUser?.role?.toUpperCase() ?? '',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
 
                   // Account Section
-                  _buildSectionTitle('Account'),
+                  _buildSectionTitle('Akun'),
                   _buildSettingItem(
-                    title: 'Change Username',
+                    title: 'Ubah Username',
+                    subtitle: _currentUser?.username,
                     icon: Icons.person_outline,
                     onTap: () {
                       Navigator.push(
@@ -222,7 +305,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   _buildSettingItem(
-                    title: 'Change Password',
+                    title: 'Ubah Password',
+                    subtitle: '••••••••',
                     icon: Icons.lock_outline,
                     onTap: () {
                       Navigator.push(
@@ -233,29 +317,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   ),
-                  _buildSettingItem(
-                    title: 'Delete Account',
-                    icon: Icons.delete_outline,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DeleteAccountScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildSettingItem(
-                    title: 'Logout',
-                    icon: Icons.logout,
-                    onTap: _handleLogout,
-                    showDivider: false,
-                  ),
 
                   // General Section
-                  _buildSectionTitle('General'),
+                  _buildSectionTitle('Umum'),
                   _buildSettingItem(
                     title: 'Pengaturan Gym',
+                    subtitle: _setting?.gymName ?? 'Belum diatur',
                     icon: Icons.business,
                     onTap: () {
                       Navigator.push(
@@ -266,19 +333,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   ),
-                  _buildSettingItem(
-                    title: 'Rate Us',
-                    icon: Icons.star_border,
-                    onTap: () {
-                      // Implement rate us
-                    },
-                    showDivider: false,
-                  ),
 
                   // Support Section
-                  _buildSectionTitle('Support'),
+                  _buildSectionTitle('Bantuan'),
                   _buildSettingItem(
-                    title: 'Terms of Service',
+                    title: 'Syarat dan Ketentuan',
                     icon: Icons.description_outlined,
                     onTap: () {
                       Navigator.push(
@@ -290,7 +349,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   _buildSettingItem(
-                    title: 'Privacy Policy',
+                    title: 'Kebijakan Privasi',
                     icon: Icons.privacy_tip_outlined,
                     onTap: () {
                       Navigator.push(
@@ -302,8 +361,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   _buildSettingItem(
-                    title: 'Contact Us',
-                    icon: Icons.info_outline,
+                    title: 'Hubungi Kami',
+                    icon: Icons.headset_mic_outlined,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -312,7 +371,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       );
                     },
-                    showDivider: false,
+                  ),
+
+                  // Danger Zone
+                  _buildSectionTitle('Bahaya'),
+                  _buildSettingItem(
+                    title: 'Hapus Akun',
+                    icon: Icons.delete_outline,
+                    isDestructive: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DeleteAccountScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildSettingItem(
+                    title: 'Keluar',
+                    icon: Icons.logout,
+                    isDestructive: true,
+                    onTap: _handleLogout,
                   ),
 
                   const SizedBox(height: 32),

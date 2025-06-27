@@ -157,8 +157,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> with Sing
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withOpacity(0.8),
+                Colors.blue.shade700,
+                Colors.blue.shade500,
               ],
             ),
           ),
@@ -217,7 +217,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> with Sing
                               children: [
                                 Icon(
                                   Icons.date_range,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Colors.blue.shade700,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -226,7 +226,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> with Sing
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Colors.blue.shade700,
                                   ),
                                 ),
                               ],
@@ -601,12 +601,19 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> with Sing
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: color.withOpacity(0.3),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [

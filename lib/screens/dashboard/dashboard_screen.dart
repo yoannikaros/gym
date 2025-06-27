@@ -492,10 +492,11 @@ class DashboardScreen extends StatelessWidget {
         required String title,
         required String value,
         required IconData icon,
-    required Gradient gradient,
+        required Gradient gradient,
       }) {
     return Container(
       width: 220,
+      height: 150,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
         gradient: gradient,
@@ -509,35 +510,42 @@ class DashboardScreen extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    icon,
+              ),
+              child: Icon(
+                icon,
                 color: Colors.white,
                 size: 24,
-                ),
-            ),
-            const Spacer(),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 4),
+            const Spacer(),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 2),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.white.withOpacity(0.8),
@@ -638,24 +646,8 @@ class DashboardScreen extends StatelessWidget {
                     color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    'Lihat Detail',
-                    style: TextStyle(
-                      fontSize: 12,
-                        color: Colors.white.withOpacity(0.8),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.arrow_forward,
-                    size: 12,
-                      color: Colors.white.withOpacity(0.8),
-                  ),
-                ],
-              ),
+             // const SizedBox(height: 4),
+            
             ],
             ),
           ),

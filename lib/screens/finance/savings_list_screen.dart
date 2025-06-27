@@ -117,8 +117,8 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withOpacity(0.8),
+                Colors.blue.shade700,
+                Colors.blue.shade500,
               ],
             ),
           ),
@@ -148,14 +148,14 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor.withOpacity(0.8),
+                          Colors.blue.shade700,
+                          Colors.blue.shade500,
                         ],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                          color: Colors.blue.shade700.withOpacity(0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -193,7 +193,7 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
                                     child: _buildSummaryItem(
                                       'Total Setoran',
                                       CurrencyFormatter.format(_summary['deposit'] ?? 0),
-                                      Colors.green,
+                                      Colors.green.shade600,
                                     ),
                                   ),
                                   const SizedBox(width: 16),
@@ -201,7 +201,7 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
                                     child: _buildSummaryItem(
                                       'Total Penarikan',
                                       CurrencyFormatter.format(_summary['withdrawal'] ?? 0),
-                                      Colors.red,
+                                      Colors.red.shade600,
                                     ),
                                   ),
                                 ],
@@ -210,7 +210,7 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
                               _buildSummaryItem(
                                 'Saldo Saat Ini',
                                 CurrencyFormatter.format(_summary['balance'] ?? 0),
-                                Colors.blue,
+                                Colors.blue.shade600,
                                 isLarge: true,
                               ),
                             ],
@@ -435,30 +435,35 @@ class _SavingsListScreenState extends State<SavingsListScreen> with SingleTicker
 
   Widget _buildSummaryItem(String label, String value, Color color, {bool isLarge = false}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-          width: 1,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
             style: TextStyle(
-              fontSize: isLarge ? 16 : 14,
+              fontSize: 14,
               color: color.withOpacity(0.8),
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             value,
             style: TextStyle(
-              fontSize: isLarge ? 24 : 20,
+              fontSize: isLarge ? 24 : 18,
               fontWeight: FontWeight.bold,
               color: color,
             ),

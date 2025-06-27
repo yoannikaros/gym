@@ -159,10 +159,24 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
 
   Future<void> _sharePDF() async {
     if (_receipt == null) return;
-
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      await _receiptPDF.sharePDF(_receipt!);
+      // Generate and save PDF file
+      final file = await _receiptPDF.savePDFTemp(_receipt!);
+      setState(() {
+        _isLoading = false;
+      });
+      // Share the PDF file using ShareXFiles
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'Struk Pembayaran ${_receipt?.setting.gymName ?? "Gym"}',
+      );
     } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
